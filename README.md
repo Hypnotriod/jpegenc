@@ -1,7 +1,12 @@
 # jpegenc
 CGO bindings package for [JPEGENC](https://github.com/bitbank2/JPEGENC) C library. All credits to its authors. 
 
-# usage example
+## installation
+```
+go get github.com/Hypnotriod/jpegenc
+```
+
+## usage
 ```go
 params := jpegenc.JpegEncodeParams{
   QualityFactor: jpegenc.JpegQualityFactorBest,
