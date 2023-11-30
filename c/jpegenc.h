@@ -51,7 +51,8 @@
 #define BIGINT int64_t
 #define BIGUINT uint64_t
 
-static inline uint64_t XXH_swap64(uint64_t x)
+#ifndef __builtin_bswap64
+static inline uint64_t __builtin_bswap64(uint64_t x)
 {
     return ((x << 56) & 0xff00000000000000ULL) |
            ((x << 40) & 0x00ff000000000000ULL) |
@@ -62,6 +63,7 @@ static inline uint64_t XXH_swap64(uint64_t x)
            ((x >> 40) & 0x000000000000ff00ULL) |
            ((x >> 56) & 0x00000000000000ffULL);
 }
+#endif
 
 // structure for outputting variable length codes
 typedef struct pil_code_tag
@@ -80,7 +82,7 @@ typedef struct pil_code_tag
         ul1 &= 0x0101010101010101;                                     \
         if (ul1 == 0)                                                  \
         {                                                              \
-            *(uint64_t *)pOut = XXH_swap64(ul2);                       \
+            *(uint64_t *)pOut = __builtin_bswap64(ul2);                \
             pOut += 8;                                                 \
             iLen -= 64;                                                \
             ulAcc = 0;                                                 \

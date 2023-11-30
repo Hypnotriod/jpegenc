@@ -1,7 +1,7 @@
 package jpegenc
 
 /*
-#cgo CFLAGS: -g -Wall
+#cgo CFLAGS: -g -Wall -O3
 #include "c/jpegenc.c"
 #include "c/jpegenc.h"
 #include "c/jpegenc.inl"
