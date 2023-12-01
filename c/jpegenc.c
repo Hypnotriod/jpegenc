@@ -1,10 +1,9 @@
-// Port of https://github.com/bitbank2/JPEGENC by Larry Bank
-
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include "jpegenc.h"
 
+// A simple wrapper function that does just one thing – encodes the raw data into a jpeg
 int JPEGEncode(int width, int height, uint8_t pixel_type, uint8_t sub_sample, uint8_t q_factor, uint8_t *pixels, uint8_t *buff, int buff_size, int *bytes_encoded)
 {
     int i;
