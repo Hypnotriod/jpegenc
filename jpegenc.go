@@ -12,41 +12,41 @@ import (
 	"unsafe"
 )
 
-type JpegPixelType int
+type PixelType int
 
 const (
-	JpegPixelTypeGrayscale JpegPixelType = iota
-	JpegPixelTypeRGB565    JpegPixelType = iota
-	JpegPixelTypeRGB888    JpegPixelType = iota
-	JpegPixelTypeARGB8888  JpegPixelType = iota
+	PixelTypeGrayscale PixelType = iota
+	PixelTypeRGB565    PixelType = iota
+	PixelTypeRGB888    PixelType = iota
+	PixelTypeARGB8888  PixelType = iota
 )
 
-type JpegSubsample int
+type Subsample int
 
 const (
-	JpegSubsample444 JpegSubsample = iota
-	JpegSubsample424 JpegSubsample = iota
+	Subsample444 Subsample = iota
+	Subsample424 Subsample = iota
 )
 
-type JpegQualityFactor int
+type QualityFactor int
 
 const (
-	JpegQualityFactorBest   JpegQualityFactor = iota
-	JpegQualityFactorHigh   JpegQualityFactor = iota
-	JpegQualityFactorMedium JpegQualityFactor = iota
-	JpegQualityFactorLow    JpegQualityFactor = iota
+	QualityFactorBest   QualityFactor = iota
+	QualityFactorHigh   QualityFactor = iota
+	QualityFactorMedium QualityFactor = iota
+	QualityFactorLow    QualityFactor = iota
 )
 
-type JpegErrorCode int
+type ErrorCode int
 
 const (
-	JpegSuccess                     JpegErrorCode = iota
-	JpegInvalidParameterErrorCode   JpegErrorCode = iota
-	JpegEncodeErrorCode             JpegErrorCode = iota
-	JpegMemoryErrorCode             JpegErrorCode = iota
-	JpegNoBufferErrorCode           JpegErrorCode = iota
-	JpegUnsupportedFeatureErrorCode JpegErrorCode = iota
-	JpegInvalidFileErrorCode        JpegErrorCode = iota
+	Success                     ErrorCode = iota
+	InvalidParameterErrorCode   ErrorCode = iota
+	EncodeErrorCode             ErrorCode = iota
+	MemoryErrorCode             ErrorCode = iota
+	NoBufferErrorCode           ErrorCode = iota
+	UnsupportedFeatureErrorCode ErrorCode = iota
+	InvalidFileErrorCode        ErrorCode = iota
 )
 
 var (
@@ -58,13 +58,13 @@ var (
 	ErrInvalidFile        error = errors.New("jpegenc: invalid file")
 )
 
-type JpegEncodeParams struct {
-	QualityFactor JpegQualityFactor
-	PixelType     JpegPixelType
-	Subsample     JpegSubsample
+type EncodeParams struct {
+	QualityFactor QualityFactor
+	PixelType     PixelType
+	Subsample     Subsample
 }
 
-func Encode(width int, height int, params JpegEncodeParams, pixels []byte, buffer []byte) (bytesEncoded int, err error) {
+func Encode(width int, height int, params EncodeParams, pixels []byte, buffer []byte) (bytesEncoded int, err error) {
 	errorCode := C.JPEGEncode(
 		C.int(width),
 		C.int(height),
@@ -76,18 +76,18 @@ func Encode(width int, height int, params JpegEncodeParams, pixels []byte, buffe
 		C.int(len(buffer)),
 		(*C.int)(unsafe.Pointer(&bytesEncoded)),
 	)
-	switch JpegErrorCode(errorCode) {
-	case JpegInvalidParameterErrorCode:
+	switch ErrorCode(errorCode) {
+	case InvalidParameterErrorCode:
 		err = ErrInvalidParameter
-	case JpegEncodeErrorCode:
+	case EncodeErrorCode:
 		err = ErrEncodeError
-	case JpegMemoryErrorCode:
+	case MemoryErrorCode:
 		err = ErrMemoryError
-	case JpegNoBufferErrorCode:
+	case NoBufferErrorCode:
 		err = ErrNoBufferError
-	case JpegUnsupportedFeatureErrorCode:
+	case UnsupportedFeatureErrorCode:
 		err = ErrUnsupportedFeature
-	case JpegInvalidFileErrorCode:
+	case InvalidFileErrorCode:
 		err = ErrInvalidFile
 	}
 	return

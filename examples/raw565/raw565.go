@@ -527,10 +527,10 @@ var pixelsRGB656 = [...]byte{
 }
 
 func main() {
-	params := jpegenc.JpegEncodeParams{
-		QualityFactor: jpegenc.JpegQualityFactorBest,
-		PixelType:     jpegenc.JpegPixelTypeRGB565,
-		Subsample:     jpegenc.JpegSubsample444,
+	params := jpegenc.EncodeParams{
+		QualityFactor: jpegenc.QualityFactorBest,
+		PixelType:     jpegenc.PixelTypeRGB565,
+		Subsample:     jpegenc.Subsample444,
 	}
 	buffer := make([]byte, max(1024, width*height))
 	bytesEncoded, err := jpegenc.Encode(width, height, params, pixelsRGB656[:], buffer)
