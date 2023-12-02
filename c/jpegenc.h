@@ -51,7 +51,7 @@
 #define BIGINT int64_t
 #define BIGUINT uint64_t
 
-#ifndef __builtin_bswap64
+#if (!(__has_builtin(__builtin_bswap64)))
 static inline uint64_t __builtin_bswap64(uint64_t x)
 {
     return ((x << 56) & 0xff00000000000000ULL) |
