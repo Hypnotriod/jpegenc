@@ -808,7 +808,7 @@ int JPEGEncodeEnd(JPEGIMAGE *pJPEG)
 //
 // Initialize the encoder
 //
-int JPEGEncodeBegin(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, int iWidth, int iHeight, uint8_t ucPixelType, uint8_t ucSubSample, uint8_t ucQFactor)
+int JPEGEncodeBegin(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, int iWidth, int iHeight, uint8_t ucPixelType, uint8_t ucSubSample, uint8_t ucQFactor, bool ucChromaSwap)
 {
     uint8_t *pBuf;
     int i;
@@ -820,6 +820,7 @@ int JPEGEncodeBegin(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, int iWidth, int iHeig
     pJPEG->iDCPred0 = pJPEG->iDCPred1 = pJPEG->iDCPred2 = 0; // DC predictor values reset to 0
     pJPEG->iWidth = iWidth;
     pJPEG->iHeight = iHeight;
+    pJPEG->ucChromaSwap = ucChromaSwap;
     pJPEG->ucPixelType = ucPixelType;
     pJPEG->ucSubSample = ucSubSample;
     pEncode->x = pEncode->y = 0; // starting point
@@ -1783,11 +1784,11 @@ int JPEGAddMCU(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, uint8_t *pPixels, int iPit
             // Y
             bSparse = JPEGQuantize(pJPEG, pJPEG->MCUs, 0);
             pJPEG->iDCPred0 = JPEGEncodeMCU(0, pJPEG, pJPEG->MCUs, pJPEG->iDCPred0, bSparse);
-            JPEGFDCT(&pJPEG->MCUc[1 * DCTSIZE], pJPEG->MCUs);
+            JPEGFDCT(&pJPEG->MCUc[(pJPEG->ucChromaSwap ? 2 : 1) * DCTSIZE], pJPEG->MCUs);
             // Cb
             bSparse = JPEGQuantize(pJPEG, pJPEG->MCUs, 1);
             pJPEG->iDCPred1 = JPEGEncodeMCU(1, pJPEG, pJPEG->MCUs, pJPEG->iDCPred1, bSparse);
-            JPEGFDCT(&pJPEG->MCUc[2 * DCTSIZE], pJPEG->MCUs);
+            JPEGFDCT(&pJPEG->MCUc[(pJPEG->ucChromaSwap ? 1 : 2) * DCTSIZE], pJPEG->MCUs);
             // Cr
             bSparse = JPEGQuantize(pJPEG, pJPEG->MCUs, 1);
             pJPEG->iDCPred2 = JPEGEncodeMCU(1, pJPEG, pJPEG->MCUs, pJPEG->iDCPred2, bSparse);
@@ -1807,10 +1808,10 @@ int JPEGAddMCU(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, uint8_t *pPixels, int iPit
             JPEGFDCT(&pJPEG->MCUc[3 * DCTSIZE], pJPEG->MCUs); // Y3
             bSparse = JPEGQuantize(pJPEG, pJPEG->MCUs, 0);
             pJPEG->iDCPred0 = JPEGEncodeMCU(0, pJPEG, pJPEG->MCUs, pJPEG->iDCPred0, bSparse);
-            JPEGFDCT(&pJPEG->MCUc[4 * DCTSIZE], pJPEG->MCUs); // Cb
+            JPEGFDCT(&pJPEG->MCUc[(pJPEG->ucChromaSwap ? 5 : 4) * DCTSIZE], pJPEG->MCUs); // Cb
             bSparse = JPEGQuantize(pJPEG, pJPEG->MCUs, 1);
             pJPEG->iDCPred1 = JPEGEncodeMCU(1, pJPEG, pJPEG->MCUs, pJPEG->iDCPred1, bSparse);
-            JPEGFDCT(&pJPEG->MCUc[5 * DCTSIZE], pJPEG->MCUs); // Cr
+            JPEGFDCT(&pJPEG->MCUc[(pJPEG->ucChromaSwap ? 4 : 5) * DCTSIZE], pJPEG->MCUs); // Cr
             bSparse = JPEGQuantize(pJPEG, pJPEG->MCUs, 1);
             pJPEG->iDCPred2 = JPEGEncodeMCU(1, pJPEG, pJPEG->MCUs, pJPEG->iDCPred2, bSparse);
         } // 420 subsample

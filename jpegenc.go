@@ -62,6 +62,7 @@ type EncodeParams struct {
 	QualityFactor QualityFactor
 	PixelType     PixelType
 	Subsample     Subsample
+	ChromaSwap    bool
 }
 
 func Encode(width int, height int, params EncodeParams, pixels []byte, buffer []byte) (bytesEncoded int, err error) {
@@ -71,6 +72,7 @@ func Encode(width int, height int, params EncodeParams, pixels []byte, buffer []
 		C.uchar(params.PixelType),
 		C.uchar(params.Subsample),
 		C.uchar(params.QualityFactor),
+		C.bool(params.ChromaSwap),
 		(*C.uchar)(unsafe.Pointer(&pixels[0])),
 		(*C.uchar)(unsafe.Pointer(&buffer[0])),
 		C.int(len(buffer)),

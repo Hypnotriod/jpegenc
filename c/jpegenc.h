@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 
 #define memcpy_P memcpy
 #define PROGMEM
@@ -209,6 +210,7 @@ typedef struct jpeg_image_tag
     int iWidth, iHeight;       // image size
     int iMCUWidth, iMCUHeight; // number of horizontal and vertical MCUs
     int x, y;                  // current MCU x/y
+    bool ucChromaSwap;
     uint8_t ucPixelType, ucSubSample, ucNumComponents;
     uint8_t ucMemType;
     uint8_t *pOutput, *pHighWater;
@@ -241,8 +243,8 @@ typedef struct jpegencode_t
     int cx, cy; // current width+height of the MCU
 } JPEGENCODE;
 
-int JPEGEncode(int width, int height, uint8_t pixel_type, uint8_t sub_sample, uint8_t q_factor, uint8_t *pixels, uint8_t *buff, int buff_size, int *bytes_encoded);
-int JPEGEncodeBegin(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, int iWidth, int iHeight, uint8_t ucPixelType, uint8_t ucSubSample, uint8_t ucQFactor);
+int JPEGEncode(int width, int height, uint8_t pixel_type, uint8_t sub_sample, uint8_t q_factor, bool chroma_swap, uint8_t *pixels, uint8_t *buff, int buff_size, int *bytes_encoded);
+int JPEGEncodeBegin(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, int iWidth, int iHeight, uint8_t ucPixelType, uint8_t ucSubSample, uint8_t ucQFactor, bool ucChromaSwap);
 int JPEGEncodeEnd(JPEGIMAGE *pJPEG);
 int JPEGAddMCU(JPEGIMAGE *pJPEG, JPEGENCODE *pEncode, uint8_t *pPixels, int iPitch);
 

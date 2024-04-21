@@ -4,7 +4,7 @@
 #include "jpegenc.h"
 
 // A simple wrapper function that does just one thing – encodes the raw data into a jpeg
-int JPEGEncode(int width, int height, uint8_t pixel_type, uint8_t sub_sample, uint8_t q_factor, uint8_t *pixels, uint8_t *buff, int buff_size, int *bytes_encoded)
+int JPEGEncode(int width, int height, uint8_t pixel_type, uint8_t sub_sample, uint8_t q_factor, bool chroma_swap, uint8_t *pixels, uint8_t *buff, int buff_size, int *bytes_encoded)
 {
     int i;
     int code;
@@ -51,7 +51,8 @@ int JPEGEncode(int width, int height, uint8_t pixel_type, uint8_t sub_sample, ui
                            height,
                            pixel_type,
                            sub_sample,
-                           q_factor);
+                           q_factor,
+                           chroma_swap);
     if (code != JPEG_SUCCESS)
         return code;
 
