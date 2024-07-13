@@ -1,5 +1,5 @@
 # jpegenc
-CGO bindings package for [JPEGENC](https://github.com/bitbank2/JPEGENC) C library. All credits to its authors. 
+Self contained CGO bindings package (with C source code included) for [JPEGENC](https://github.com/bitbank2/JPEGENC) C library. All credits to its authors. 
 
 ## installation
 ```
